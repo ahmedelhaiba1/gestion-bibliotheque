@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<h:head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
     <title>Gestion des Livres</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&amp;display=swap" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
     <style>
         /* General Styles */
         body {
@@ -141,9 +142,9 @@
         	padding: 10px;
         	border-radius: 10px;
         }
-        
+
         .btn-success {
-            background-color: #4caf50; 
+            background-color: #4caf50;
             color: white;
             border: none;
         	padding: 10px;
@@ -182,7 +183,7 @@ input[type="file"] {
    .dash-img img {
     height: 120px;
     width: 200px;
-}     
+}
 .book-manage{
 background-color: white;
 display: flex;
@@ -194,87 +195,89 @@ margin: auto;
 padding: 10px;
 }
     </style>
+
     <script>
-    function displayFileName(input) {
-        const fileName = input.files.length > 0 ? input.files[0].name : "Aucun fichier choisi";
-        document.getElementById('file-name').innerText = fileName;
-    }
-</script>
-    
-</h:head>
+        function displayFileName(input) {
+            const fileName = input.files.length > 0 ? input.files[0].name : "Aucun fichier choisi";
+            document.getElementById('file-name').innerText = fileName;
+        }
+    </script>
+</head>
 
-<h:body>
-    <div class="layout">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <nav>
-                <a href="/gestion_livres">Gestion des Livres</a>
-                <a href="/gestion_emprunts">Gestion des Emprunts</a>
-                <a href="#">Autres Pages</a>
-            </nav>
-            <button>Se Déconnecter</button>
-        </div>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <nav>
+            <a th:href="@{/gestion_livres}">Gestion des Livres</a>
+            <a th:href="@{/gestion_emprunts}">Gestion des Emprunts</a>
+            <a href="#">Autres Pages</a>
+        </nav>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Se Déconnecter</button>
+        </form>
+    </div>
 
-        <!-- Main Content -->
-        <div class="main">
+    <!-- Main Content -->
+    <div class="main">
         <div class="book-manage">
-        <h2>Gestion des Livres</h2>
- <div class="dash-img">
-	            	<img src="#{request.contextPath}/images/sth3.jpg" alt="Library" class="img-fluid rounded " />
-	            </div>
+            <h2>Gestion des Livres</h2>
+            <div class="dash-img">
+                <img th:src="@{/images/sth3.jpg}" alt="Library" class="img-fluid rounded"/>
+            </div>
         </div>
-            
-            <!-- Formulaire d'ajout d'un livre -->
-            <div class="form-container">
-                <h3>Ajouter un Livre</h3>
-               
+
+        <!-- Formulaire d'ajout d'un livre -->
+        <div class="form-container">
+            <h3>Ajouter un Livre</h3>
+            <form th:action="@{/livres/ajouter}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="bookTitle">Titre</label>
-                    <input id="bookTitle" name="bookTitle" type="text" placeholder="Titre du livre" />
+                    <input id="bookTitle" name="titre" type="text" placeholder="Titre du livre" />
                 </div>
                 <div class="form-group">
                     <label for="bookAuthor">Auteur</label>
-                    <input id="bookAuthor" name="bookAuthor" type="text" placeholder="Auteur du livre" />
+                    <input id="bookAuthor" name="auteur" type="text" placeholder="Auteur du livre" />
                 </div>
-               <div class="form-group">
-    <label for="bookCover">Image</label><br/>
-    <label for="bookCover" class="custom-file-upload">Choisir une image</label>
-    <input id="bookCover" name="bookCover" type="file" onchange="displayFileName(this)" />
-    <span id="file-name" class="file-name-display">Aucun fichier choisi</span>
-</div>
-
+                <div class="form-group">
+                    <label for="bookCover">Image</label><br/>
+                    <label for="bookCover" class="custom-file-upload">Choisir une image</label>
+                    <input id="bookCover" name="image" type="file" onchange="displayFileName(this)" />
+                    <span id="file-name" class="file-name-display">Aucun fichier choisi</span>
+                </div>
                 <div class="form-group">
                     <label for="bookPublishedDate">Date de Publication</label>
-                    <input id="bookPublishedDate" name="bookPublishedDate" type="date" />
+                    <input id="bookPublishedDate" name="datePublication" type="date" />
                 </div>
                 <button type="submit" class="submit-button">Ajouter</button>
-            </div>
-
-            <!-- Liste des livres -->
-            <h3 class="mt-4">Liste des Livres</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Titre</th>
-                        <th>Auteur</th>
-                        <th>Date de Publication</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>The Mystery of Mercy</td>
-                        <td>John Doe</td>
-                        <td>2023-01-12</td>
-                        <td>
-                            <button class="btn btn-warning">Modifier</button>
-                            <button class="btn btn-danger">Supprimer</button>
-                        </td>
-                    </tr>
-                    <!-- Ajouter plus de livres ici -->
-                </tbody>
-            </table>
+            </form>
         </div>
+
+        <!-- Liste des livres -->
+        <h3 class="mt-4">Liste des Livres</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Date de Publication</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="livre : ${livres}">
+                <td th:text="${livre.titre}">Titre</td>
+                <td th:text="${livre.auteur}">Auteur</td>
+                <td th:text="${#dates.format(livre.datePublication, 'yyyy-MM-dd')}">Date</td>
+                <td>
+                    <a th:href="@{'/livres/modifier/' + ${livre.id}}" class="btn btn-warning">Modifier</a>
+                    <a th:href="@{'/livres/supprimer/' + ${livre.id}}" class="btn btn-danger"
+                       onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-</h:body>
+</div>
+</body>
 </html>

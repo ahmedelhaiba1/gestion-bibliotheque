@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<h:head>
-    <title>Gestion des Emprunts</title>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Historique des Emprunts</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&amp;display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -119,7 +120,7 @@
            .dash-img img {
     height: 120px;
     width: 200px;
-}   
+}
         .book-manage{
 background-color: white;
 display: flex;
@@ -131,75 +132,79 @@ margin: auto;
 padding: 10px;
 }
     </style>
-</h:head>
+</head>
 
-<h:body>
-    <div class="layout">
-        <div class="sidebar">
-            <div>
-                <h2>Biblioo</h2>
-                <nav>
-                <a href="/gestion_livres">Gestion des Livres</a>
-                <a href="/gestion_emprunts">Gestion des Emprunts</a>
-                <a href="#">Dashboard</a>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <h2>Biblioo</h2>
+            <nav>
+                <a th:href="@{/}">Acceuil</a>
+                <a th:href="@{/dashboard}">Livres</a>
+                <a th:href="@{/historique}">Emprunts</a>
+                <a th:href="@{/notifications}">Notifications</a>
+                <a th:href="@{/profile}">Mon Profil</a>
             </nav>
+        </div>
+        <button>Se Deconnecter</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div>
+                <h3>Historique des Emprunts</h3>
             </div>
-            <button>Se Déconnecter</button>
+            <div class="dash-img">
+                <img th:src="@{/images/sth3.jpg}" alt="Library" class="img-fluid rounded" />
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main">
-         <div class="book-manage">
-        <h2>Gestion des emprunts</h2>
- <div class="dash-img">
-	            	<img src="#{request.contextPath}/images/sth3.jpg" alt="Library" class="img-fluid rounded " />
-	            </div>
-	            </div>
-            <h:form>
-               
-
-                <div class="form-container">
-                    <h3>Deamndes recus</h3>
-                    <div class="form-group">
-                        <label for="borrowerName">Nom de l'emprunteur</label>
-                        <input id="borrowerName" name="borrowerName" type="text" placeholder="Nom de l'emprunteur" />
-                    </div>
-                    <div class="form-group">
-                        <label for="borrowDate">Date d'emprunt</label>
-                        <input id="borrowDate" name="borrowDate" type="date" />
-                    </div>
-                    <div class="form-group">
-                        <label for="bookId">Livre à emprunter</label>
-                        <input id="bookId" name="bookId" type="text" placeholder="ID du livre" />
-                    </div>
-                    <button type="submit" class="submit-button">Accepter</button>
-                    <button type="submit" class="submit-button">Refuser</button>
-                </div>
-
-                <!-- Historique des emprunts -->
-                <h3 class="mt-4">Historique des Emprunts</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nom de l'Emprunteur</th>
-                            <th>Livre Emprunté</th>
-                            <th>Date d'Emprunt</th>
-                            <th>Date de Retour</th>
-                            <th>Etat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Jean Dupont</td>
-                            <td>The Mystery of Mercy</td>
-                            <td>2023-04-10</td>
-                            <td>2023-05-10</td>
-                            <td>Retourné</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </h:form>
+        <!-- Historique Section -->
+        <div class="historique-info">
+            <h2>Liste des livres empruntés</h2>
+            <table class="historique-table">
+                <thead>
+                <tr>
+                    <th>Titre du Livre</th>
+                    <th>Date d'Emprunt</th>
+                    <th>Date de Retour</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Exemple statique - tu peux itérer dynamiquement avec Thymeleaf -->
+                <tr>
+                    <td>Le Mystère de la Falaise</td>
+                    <td>01 mai 2025</td>
+                    <td>15 mai 2025</td>
+                    <td>Emprunté</td>
+                    <td><button class="btn">Retourner</button></td>
+                </tr>
+                <tr>
+                    <td>Les Secrets du Passé</td>
+                    <td>20 avril 2025</td>
+                    <td>04 mai 2025</td>
+                    <td>Rendu</td>
+                    <td><button class="btn">Retourner</button></td>
+                </tr>
+                <!-- Ou en version dynamique : -->
+                <!--
+                <tr th:each="emprunt : ${emprunts}">
+                    <td th:text="${emprunt.titre}"></td>
+                    <td th:text="${emprunt.dateEmprunt}"></td>
+                    <td th:text="${emprunt.dateRetour}"></td>
+                    <td th:text="${emprunt.status}"></td>
+                    <td><button class="btn" th:onclick="'retourner(' + ${emprunt.id} + ')'">Retourner</button></td>
+                </tr>
+                -->
+                </tbody>
+            </table>
         </div>
     </div>
-</h:body>
+</div>
+</body>
 </html>

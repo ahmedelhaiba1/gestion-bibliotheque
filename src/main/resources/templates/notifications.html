@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<h:head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
     <title>Notifications</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <style>
         body {
@@ -11,7 +10,6 @@
             font-family: 'Nunito', sans-serif;
             background-color: #f4f6f8;
         }
-
         .layout {
             display: flex;
             flex-direction: row;
@@ -19,10 +17,9 @@
             overflow: hidden;
             flex-wrap: wrap;
         }
-
         .sidebar {
             width: 250px;
-            background-color: #6a1b9a; /* Purple shades */
+            background-color: #6a1b9a;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             padding: 20px;
             display: flex;
@@ -30,7 +27,6 @@
             justify-content: space-between;
             color: white;
         }
-
         .sidebar nav a {
             display: block;
             margin: 10px 0;
@@ -38,18 +34,16 @@
             color: white;
             font-weight: bold;
         }
-
-         .sidebar button {
+        .sidebar button {
             margin-top: 20px;
             width: 100%;
             padding: 10px;
-            background-color: #9c4dcc; /* Light purple */
+            background-color: #9c4dcc;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-
         button {
             background-color: rgb(104,74,193);
             color: white;
@@ -59,13 +53,11 @@
             padding: 8px 16px;
             border-radius: 5px;
         }
-
         .main {
             flex: 1;
             padding: 30px;
             overflow-y: auto;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -74,13 +66,11 @@
             padding: 12px;
             border-radius: 12px;
         }
-
         .notifications {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
         .notification-card {
             display: flex;
             flex-direction: column;
@@ -91,30 +81,25 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             margin-bottom: 1rem;
         }
-
         .notification-card h3 {
             margin: 0;
             font-size: 18px;
             color: rgb(104, 74, 193);
         }
-
         .notification-card p {
             font-size: 14px;
             color: #666;
         }
-
         .notification-card .timestamp {
             font-size: 12px;
             color: #999;
             margin-top: 10px;
         }
-
         .search-container {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
         }
-
         .search-bar {
             width: 300px;
             padding: 10px 15px;
@@ -124,77 +109,70 @@
             background-color: #fff;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
-
         .search-bar:focus {
             border-color: #42a5f5;
             box-shadow: 0 0 8px rgba(66, 165, 245, 0.5);
         }
-        .img-fluid{
-        	width: 70px;
+        .img-fluid {
+            width: 70px;
         }
-        .notities{
-        	display: flex;
-        	flex-direction: row;
-        	align-items: center;
+        .notities {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
     </style>
-</h:head>
+</head>
 
-<h:body>
-    <div class="layout">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div>
-                <h2>Biblioo</h2>
-                <nav>
-                    <a href="/">Acceuil</a>
-                    <a href="dashboard">Livres</a>
-                    <a href="historique">Emprunts</a>
-                    <a href="notifications">Notifications</a>
-                    <a href="profile">Mon Profil</a>
-                </nav>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <h2>Biblioo</h2>
+            <nav>
+                <a href="/">Accueil</a>
+                <a href="/dashboard">Livres</a>
+                <a href="/historique">Emprunts</a>
+                <a href="/notifications">Notifications</a>
+                <a href="/profile">Mon Profil</a>
+            </nav>
+        </div>
+        <button>Se Déconnecter</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="notities">
+                <img src="/images/notifications.png" alt="Library" class="img-fluid rounded" />
+                <h3>Notifications</h3>
             </div>
-            <button>
-                Se Déconnecter
-            </button>
+            <div class="search-container">
+                <input placeholder="Chercher vos notifications..." class="search-bar"/>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main">
-            <div class="header">
-            <div class="notities">
-            	            	<img src="#{request.contextPath}/images/notifications.png" alt="Library" class="img-fluid rounded " />
-            
-                            <h3>Notifications</h3>
-        
-            </div>
-                <div class="search-container">
-                    <input placeholder="Chercher vos notifications..." class="search-bar"/>
-                </div>
+        <div class="notifications">
+            <div class="notification-card">
+                <h3>Retour Livre: Gatsby</h3>
+                <p>Le livre "Gatsby le Magnifique" doit être retourné avant le 10 mai.</p>
+                <div class="timestamp">Publié le 01 mai 2025</div>
             </div>
 
-            <div class="notifications">
-                <div class="notification-card">
-                    <h3>Retour Livre: Gatsby</h3>
-                    <p>Le livre "Gatsby le Magnifique" doit être retourné avant le 10 mai.</p>
-                    <div class="timestamp">Publié le 01 mai 2025</div>
-                </div>
+            <div class="notification-card">
+                <h3>Rappel de Retard</h3>
+                <p>Vous avez un retard pour le livre "Fantastic Beasts". Veuillez le rendre dès que possible.</p>
+                <div class="timestamp">Publié le 28 avril 2025</div>
+            </div>
 
-                <div class="notification-card">
-                    <h3>Rappel de Retard</h3>
-                    <p>Vous avez un retard pour le livre "Fantastic Beasts". Veuillez le rendre dès que possible.</p>
-                    <div class="timestamp">Publié le 28 avril 2025</div>
-                </div>
-
-                <div class="notification-card">
-                    <h3>Emprunt Validé</h3>
-                    <p>Votre demande d'emprunt pour "A New Companion to Herman Melville" a été approuvée.</p>
-                    <div class="timestamp">Publié le 25 avril 2025</div>
-                </div>
-
-                <!-- Add more notifications as needed -->
+            <div class="notification-card">
+                <h3>Emprunt Validé</h3>
+                <p>Votre demande d'emprunt pour "A New Companion to Herman Melville" a été approuvée.</p>
+                <div class="timestamp">Publié le 25 avril 2025</div>
             </div>
         </div>
     </div>
-</h:body>
+</div>
+</body>
 </html>

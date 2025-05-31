@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<h:head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
     <title>Mon Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&amp;display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <style>
-        /* General Styles */
         body {
             margin: 0;
             font-family: 'Nunito', sans-serif;
@@ -27,7 +25,7 @@
 
         .sidebar {
             width: 250px;
-            background-color: #6a1b9a; /* Purple shades */
+            background-color: #6a1b9a;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             padding: 20px;
             display: flex;
@@ -44,27 +42,28 @@
             font-weight: bold;
         }
 
-      .sidebar button,button {
+        .sidebar button, button {
             margin-top: 20px;
             width: 100%;
             padding: 10px;
-            background-color: #9c4dcc; /* Light purple */
+            background-color: #9c4dcc;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-  	button{
-  	width: 15%;
-  	}
+
+        button {
+            width: 15%;
+        }
 
         .main {
             flex: 1;
             padding: 30px;
-            overflow-y: auto; /* Allow the main section to scroll vertically */
+            overflow-y: auto;
             position: relative;
-            height: 100vh; /* Ensure the main content section takes full height */
-            box-sizing: border-box; /* Ensure padding doesn't break layout */
+            height: 100vh;
+            box-sizing: border-box;
         }
 
         .header {
@@ -76,7 +75,6 @@
             border-radius: 12px;
         }
 
-        /* Profil Section */
         .profile-info {
             background-color: #ffffff;
             padding: 30px;
@@ -104,7 +102,6 @@
             color: rgb(104,74,193);
         }
 
-        /* Recent Activities Section */
         .recent-activities {
             background-color: #ffffff;
             padding: 20px;
@@ -148,12 +145,11 @@
             font-size: 14px;
         }
 
-        /* Media Queries */
         @media (max-width: 1200px) {
             .layout {
                 flex-direction: column;
             }
-            
+
             .sidebar {
                 width: 100%;
                 height: auto;
@@ -186,73 +182,72 @@
             }
         }
     </style>
-</h:head>
+</head>
 
-<h:body>
-        <div class="layout">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div>
-                    <h2>Biblioo</h2>
-                    <nav>
-                        <a href="/">Acceuil</a>
-                        <a href="dashboard">Livres</a>
-                        <a href="historique">Emprunts</a>
-                        <a href="notifications">Notifications</a>
-                        <a href="profile">Mon Profil</a>
-                    </nav>
-                </div>
-                <button>se Deconnecter</button>
-            </div>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <h2>Biblioo</h2>
+            <nav>
+                <a href="/">Acceuil</a>
+                <a href="/dashboard">Livres</a>
+                <a href="/historique">Emprunts</a>
+                <a href="/notifications">Notifications</a>
+                <a href="/profile">Mon Profil</a>
+            </nav>
+        </div>
+        <button><a th:href="@{/auth/logout}">Se deconnecter</a></button>
+    </div>
 
-            <!-- Main Content -->
-            <div class="main">
-                <div class="header">
-                    <div>
-                        <h3>Bienvenue, Anna !</h3>
-                    </div>
-                </div>
-
-                <!-- Profil Section -->
-                <div class="profile-info">
-                    <h2>Informations du Profil</h2>
-                    <div class="profile-details">
-                        <div><span>Nom : </span>Anna Smith</div>
-                        <div><span>Email : </span>anna.smith@example.com</div>
-                        <div><span>Date d'inscription : </span>2020</div>
-                        <div><span>Emprunts totaux : </span>15</div>
-                        <div><span>Status : </span>Active</div>
-                    </div>
-                    <button class="btn">Modifier le profil</button>
-                </div>
-
-                <!-- Recent Activities Section -->
-                <div class="recent-activities">
-                    <h3>Activités récentes</h3>
-                    <div class="activity-card">
-                        <div>
-                            <h4>The Mystery of Mercy</h4>
-                            <p class="status">Emprunté le 02 mai 2025</p>
-                        </div>
-                        <button class="btn">Voir détails</button>
-                    </div>
-                    <div class="activity-card">
-                        <div>
-                            <h4>Fantastic Beasts</h4>
-                            <p class="status">Emprunté le 25 avril 2025</p>
-                        </div>
-                        <button class="btn">Voir détails</button>
-                    </div>
-                    <div class="activity-card">
-                        <div>
-                            <h4>The Great Adventure</h4>
-                            <p class="status">Emprunté le 18 avril 2025</p>
-                        </div>
-                        <button class="btn">Voir détails</button>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div>
+                <h3>Bienvenue, Anna !</h3>
             </div>
         </div>
-</h:body>
 
+        <!-- Profil Section -->
+        <div class="profile-info">
+            <h2>Informations du Profil</h2>
+            <div class="profile-details">
+                <div><span>Nom : </span>Anna Smith</div>
+                <div><span>Email : </span>anna.smith@example.com</div>
+                <div><span>Date d'inscription : </span>2020</div>
+                <div><span>Emprunts totaux : </span>15</div>
+                <div><span>Status : </span>Active</div>
+            </div>
+            <button class="btn">Modifier le profil</button>
+        </div>
+
+        <!-- Recent Activities Section -->
+        <div class="recent-activities">
+            <h3>Activités récentes</h3>
+            <div class="activity-card">
+                <div>
+                    <h4>The Mystery of Mercy</h4>
+                    <p class="status">Emprunté le 02 mai 2025</p>
+                </div>
+                <button class="btn">Voir détails</button>
+            </div>
+            <div class="activity-card">
+                <div>
+                    <h4>Fantastic Beasts</h4>
+                    <p class="status">Emprunté le 25 avril 2025</p>
+                </div>
+                <button class="btn">Voir détails</button>
+            </div>
+            <div class="activity-card">
+                <div>
+                    <h4>The Great Adventure</h4>
+                    <p class="status">Emprunté le 18 avril 2025</p>
+                </div>
+                <button class="btn">Voir détails</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

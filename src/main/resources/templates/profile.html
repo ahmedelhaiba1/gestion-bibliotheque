@@ -182,6 +182,8 @@
             }
         }
     </style>
+
+
 </head>
 
 <body>
@@ -205,22 +207,38 @@
     <div class="main">
         <div class="header">
             <div>
-                <h3>Bienvenue, Anna !</h3>
+                <h3>Bienvenue, <span th:text="${user.username}">Utilisateur</span> !</h3>
             </div>
         </div>
 
         <!-- Profil Section -->
         <div class="profile-info">
             <h2>Informations du Profil</h2>
-            <div class="profile-details">
-                <div><span>Nom : </span>Anna Smith</div>
-                <div><span>Email : </span>anna.smith@example.com</div>
-                <div><span>Date d'inscription : </span>2020</div>
-                <div><span>Emprunts totaux : </span>15</div>
-                <div><span>Status : </span>Active</div>
-            </div>
-            <button class="btn">Modifier le profil</button>
+            <form th:action="@{/auth/profile/delete}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.');">
+                <button type="submit" style="background-color: #dc3545;">Supprimer Compte</button>
+            </form>
+
+            <form id="profileForm" th:action="@{/auth/profile/update}" method="post">
+                <div class="profile-details">
+                    <div>
+                        <span>Nom : </span>
+                        <span id="usernameDisplay" th:text="${user.username}"></span>
+                        <input type="text" id="usernameInput" name="username" th:value="${user.username}" style="display:none;" />
+                    </div>
+                    <div>
+                        <span>Email : </span>
+                        <span id="emailDisplay" th:text="${user.email}"></span>
+                        <input type="email" id="emailInput" name="email" th:value="${user.email}" style="display:none;" />
+                    </div>
+                    <div><span>Emprunts totaux : </span><span>15</span></div>
+                    <div><span>Status : </span><span th:text="${user.active} ? 'Actif' : 'Inactif'"></span></div>
+                </div>
+
+                <button type="button" id="editBtn" class="btn">Modifier le profil</button>
+                <button type="submit" id="saveBtn" class="btn" style="display:none;">Enregistrer</button>
+            </form>
         </div>
+
 
         <!-- Recent Activities Section -->
         <div class="recent-activities">
@@ -249,5 +267,22 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const editBtn = document.getElementById("editBtn");
+
+        if (editBtn) {
+            editBtn.addEventListener("click", function () {
+                document.getElementById("usernameDisplay").style.display = "none";
+                document.getElementById("emailDisplay").style.display = "none";
+                document.getElementById("usernameInput").style.display = "inline";
+                document.getElementById("emailInput").style.display = "inline";
+                document.getElementById("editBtn").style.display = "none";
+                document.getElementById("saveBtn").style.display = "inline";
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

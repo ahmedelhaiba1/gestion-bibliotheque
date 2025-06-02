@@ -406,10 +406,11 @@
                         <a href="dashboard">Livres</a>
                         <a href="historique">Emprunts</a>
                         <a href="notifications">Notifications</a>
-                        <a href="profile">Mon Profil</a>
+                        <a th:href="@{/auth/profile}">Mon Profil</a>
                     </nav>
                 </div>
-                <button>Se Déconnecter</button>
+                <button><a th:href="@{/auth/register}">Se Deconnecter</a>
+                </button>
             </div>
 
             <!-- Main Content -->

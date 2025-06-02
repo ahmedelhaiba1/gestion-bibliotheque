@@ -10,7 +10,7 @@ import com.example.app.service.UserService;
 
 @Controller
 @RequestMapping("/auth")
-@SessionAttributes("loggedInUser") // Store loggedInUser in session
+@SessionAttributes("loggedInUser")
 public class AuthController {
 
     private final UserService userService;
@@ -19,59 +19,109 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // Show login page (GET /auth/signin)
     @GetMapping("/signin")
     public String showLoginForm() {
-        return "signin";  // Thymeleaf template signin.html
+        return "signin";
     }
 
-    // Handle login form submit (POST /auth/login)
     @PostMapping("/login")
-    public String login(@RequestParam String username,
+    public String login(@RequestParam String email,
                         @RequestParam String password,
                         Model model,
                         RedirectAttributes redirectAttributes) {
 
-        if (userService.login(username, password)) {
-            User loggedInUser = userService.findByUsername(username);
+        if (userService.login(email, password)) {
+            User loggedInUser = userService.findByEmail(email);
             model.addAttribute("loggedInUser", loggedInUser);
-            return "redirect:/dashboard";  // Redirect to home page
+
+            return loggedInUser.isAdmin() ? "redirect:/gestion_emprunts" : "redirect:/dashboard";
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Nom d’utilisateur ou mot de passe incorrect");
-            return "redirect:/auth/signin";  // Redirect back to login page
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid email or password");
+            return "redirect:/auth/signin";
         }
     }
 
-    // Show registration page (GET /auth/register)
     @GetMapping("/register")
     public String showRegisterForm() {
-        return "signup";  // Thymeleaf template register.html
+        return "signup";
     }
 
-    // Handle registration submit (POST /auth/register)
     @PostMapping("/register")
-    public String register(@RequestParam String username,
+    public String register(@RequestParam String email,
                            @RequestParam String password,
+                           @RequestParam String username,
+                           Model model,
                            RedirectAttributes redirectAttributes) {
+
+        if (userService.emailExists(email)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Cet email est déjà utilisé.");
+            return "redirect:/auth/register";
+        }
+
+        if (userService.usernameExists(username)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Ce nom d'utilisateur est déjà pris.");
+            return "redirect:/auth/register";
+        }
 
         User user = new User();
         user.setUsername(username);
+        user.setEmail(email);
         user.setPassword(password);
+        user.setAdmin(email.contains("admin@"));
+        user.setActive(true);
 
-        if (userService.register(user)) {
-            redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie. Vous pouvez vous connecter.");
-            return "redirect:/auth/signin";
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Nom d’utilisateur déjà pris.");
-            return "redirect:/auth/register";
-        }
-    }
+        userService.register(user);
 
-    // Optional: logout method
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();  // Clear session
+        redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie, veuillez vous connecter.");
         return "redirect:/auth/signin";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/auth/signin";
+    }
+    @GetMapping("/profile")
+    public String showProfile(@SessionAttribute(value = "loggedInUser", required = false) User loggedInUser,
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+
+        if (loggedInUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please log in first.");
+            return "redirect:/auth/signin";
+        }
+
+        model.addAttribute("user", loggedInUser);
+        return "profile";
+    }
+
+
+
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@SessionAttribute("loggedInUser") User loggedInUser,
+                                @RequestParam String username,
+                                @RequestParam String email,
+                                RedirectAttributes redirectAttributes) {
+
+        loggedInUser.setUsername(username);
+        loggedInUser.setEmail(email);
+
+        userService.updateUser(loggedInUser);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Profil mis à jour avec succès.");
+        return "redirect:/auth/profile";
+    }
+    @PostMapping("/profile/delete")
+    public String deleteProfile(@SessionAttribute("loggedInUser") User loggedInUser,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        userService.deleteUser(loggedInUser); // Implement this method in your UserService
+        session.invalidate(); // Log out the user
+        redirectAttributes.addFlashAttribute("successMessage", "Compte supprimé avec succès.");
+        return "redirect:/auth/signin";
+    }
+
 
 }

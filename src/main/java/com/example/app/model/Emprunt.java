@@ -11,3 +11,11 @@ public class Emprunt {
 
     @ManyToOne
     private Utilisateur utilisateur;
+    @ManyToOne
+    private Livre livre;
+
+    private LocalDate dateEmprunt;
+    private LocalDate dateRetour;
+
+    // Getters et setters
+}

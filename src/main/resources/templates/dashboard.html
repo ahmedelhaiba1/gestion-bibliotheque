@@ -393,103 +393,84 @@
         }
 
     </style>
-    </head>
+</head>
 
-    <body>
-        <div class="layout">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div>
-                    <h2>Biblioo</h2>
-                    <nav>
-                        <a href="/">Acceuil</a>
-                        <a href="dashboard">Livres</a>
-                        <a href="historique">Emprunts</a>
-                        <a href="notifications">Notifications</a>
-                        <a href="profile">Mon Profil</a>
-                    </nav>
-                </div>
-                <button>Se Déconnecter</button>
-            </div>
-
-            <!-- Main Content -->
-            <div class="main">
-                <div class="header">
-                    <div>
-                        <h3>Bonjour Anna ! Découvrez les livres les plus appréciés...</h3> <button class="desc-btn">Consulter mes emprunts</button>
-                    </div>
-
-                    <div class="dash-img">
-                        <img th:src="@{/images/sth3.jpg}" alt="Library" class="img-fluid rounded " />
-                    </div>
-                </div>
-                <div class="search">
-                    <div>				<h3>Livres</h3>
-                    </div>
-                    <div class="search-container">
-                        <input placeholder="Chercher vos favoris..." class="search-bar"/>
-                    </div>
-                </div>
-
-                <div class="cards">
-
-
-
-                    <div class="card">
-                        <h3>Beautiful Creatures</h3>
-
-                        <img th:src="@{/images/beauty-creat.jpeg}" alt="The Mystery of Mercy Cover" class="book-cover" />
-                        <div class="book-details">
-                            <p>Amber Smith - 2018</p>
-                            <div class="rating">⭐ 4.8</div>
-                            <button>Emprunter</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3>Dating Plan</h3>
-
-                        <img th:src="@{/images/dating-plan.jpeg}" alt="Fantastic Beasts Cover" class="book-cover" />
-                        <div class="book-details">
-                            <p>J.K. Rowling - 1988</p>
-                            <div class="rating">⭐ 4.8</div>
-                            <button>Emprunter</button>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>Bone Witch</h3>
-
-                        <img th:src="@{/images/bone-witch.webp}" alt="Fantastic Beasts Cover" class="book-cover" />
-                        <div class="book-details">
-                            <p>J.K. Rowling - 1988</p>
-                            <div class="rating">⭐ 4.8</div>
-                            <button>Emprunter</button>
-                        </div>
-                    </div>
-
-                </div>
-
-
-            </div>
-
-            <div class="details">
-                <h3>Calendrier</h3>
-                <div id="calendar" class="calendar" style="max-width: 800px; margin: auto;"></div>
-                <h3>Le livre le plus populaire</h3>
-
-                <div class="best-book">
-                    <div class="best-book-cover" >
-                        <img th:src="@{/images/dating-plan.jpeg}" alt="" />
-                    </div>
-                    <div class="best-book-details">
-                        <h6>Dating Plan</h6>
-                        <p>Edited by Wyn Kelley - 2018</p>
-                    </div>
-                </div>
-            </div>
-
-
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <h2>Biblioo</h2>
+            <nav>
+                <a href="/">Acceuil</a>
+                <a href="dashboard">Livres</a>
+                <a href="historique">Emprunts</a>
+                <a href="notifications">Notifications</a>
+                <a th:href="@{/auth/profile}">Mon Profil</a>
+            </nav>
         </div>
-    </body>
+        <button><a th:href="@{/auth/register}">Se Deconnecter</a>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div>
+                <h3>Bonjour Anna ! Découvrez les livres les plus appréciés...</h3> <button class="desc-btn">Consulter mes emprunts</button>
+            </div>
+
+            <div class="dash-img">
+                <img th:src="@{/images/sth3.jpg}" alt="Library" class="img-fluid rounded " />
+            </div>
+        </div>
+        <div class="search">
+            <div>				<h3>Livres</h3>
+            </div>
+            <div class="search-container">
+                <input placeholder="Chercher vos favoris..." class="search-bar"/>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card" th:each="livre : ${livres}">
+                <h3 th:text="${livre.titre}">Titre du livre</h3>
+                <input type="hidden" name="bookId" value="the-selected-book-id" />
+
+                <img th:src="@{'/uploads/' + ${livre.imageUrl}}" alt="Image du livre" class="book-cover" />
+
+                <div class="book-details">
+                    <p th:text="${livre.auteur + ' - ' + livre.datePublication.year}">Auteur - Année</p>
+
+                    <a th:href="@{/emprunter(bookId=${livre.id}, bookTitle=${livre.titre}, imageUrl=${livre.imageUrl})}">
+                        <button>Emprunter</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="details">
+        <h3>Calendrier</h3>
+        <div id="calendar" class="calendar" style="max-width: 800px; margin: auto;"></div>
+        <h3>Le livre le plus populaire</h3>
+
+        <div class="best-book">
+            <div class="best-book-cover" >
+                <img th:src="@{/images/dating-plan.jpeg}" alt="" />
+            </div>
+            <div class="best-book-details">
+                <h6>Dating Plan</h6>
+                <p>Edited by Wyn Kelley - 2018</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
 
 </html>

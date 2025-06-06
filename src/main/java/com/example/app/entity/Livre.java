@@ -2,17 +2,19 @@ package com.example.app.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 public class Livre {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String titre;
     private String auteur;
-    private String isbn;
-    private boolean disponible = true;
-
+    private LocalDate datePublication;
+    private String imageUrl;
     // Getters et setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -23,9 +25,19 @@ public class Livre {
     public String getAuteur() { return auteur; }
     public void setAuteur(String auteur) { this.auteur = auteur; }
 
-    public String getIsbn() { return isbn; }
-    public void setIsbn(String isbn) { this.isbn = isbn; }
+    public LocalDate getDatePublication() {
+        return datePublication;
+    }
 
-    public boolean isDisponible() { return disponible; }
-    public void setDisponible(boolean disponible) { this.disponible = disponible; }
+    public void setDatePublication(LocalDate datePublication) {
+        this.datePublication = datePublication;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

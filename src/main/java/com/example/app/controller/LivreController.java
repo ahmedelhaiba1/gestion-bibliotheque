@@ -3,40 +3,54 @@ package com.example.app.controller;
 import com.example.app.entity.Livre;
 import com.example.app.service.LivreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/livres")
+@Controller
+@RequestMapping("/livres")
 public class LivreController {
 
     @Autowired
     private LivreService livreService;
 
     @GetMapping
-    public List<Livre> getAllLivres() {
-        return livreService.getAllLivres();
-    }
-
-    @GetMapping("/{id}")
-    public Livre getLivreById(@PathVariable Long id) {
-        return livreService.getLivreById(id);
+    public String showLivres(Model model) {
+        List<Livre> livres = livreService.getAllLivres();
+        model.addAttribute("livres", livres);
+        return "gestion_livres";
     }
 
     @PostMapping
-    public Livre addLivre(@RequestBody Livre livre) {
-        return livreService.saveLivre(livre);
+    public String addLivre(
+            @RequestParam("titre") String titre,
+            @RequestParam("auteur") String auteur,
+            @RequestParam("datePublication") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datePublication,
+            @RequestParam("image") MultipartFile imageFile
+    ) throws IOException {
+        livreService.saveLivre(titre, auteur, datePublication, imageFile);
+        return "redirect:/livres";
+    }
+    @PostMapping("/update/{id}")
+    public String updateLivre(
+            @PathVariable Long id,
+            @RequestParam("titre") String titre,
+            @RequestParam("auteur") String auteur,
+            @RequestParam("datePublication") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datePublication
+    ) {
+        livreService.updateLivre(id, titre, auteur, datePublication);
+        return "redirect:/livres";
     }
 
-    @PutMapping("/{id}")
-    public Livre updateLivre(@PathVariable Long id, @RequestBody Livre livre) {
-        livre.setId(id);
-        return livreService.saveLivre(livre);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteLivre(@PathVariable Long id) {
+    @GetMapping("/supprimer/{id}")
+    public String deleteLivre(@PathVariable Long id) {
         livreService.deleteLivre(id);
+        return "redirect:/livres";
     }
 }

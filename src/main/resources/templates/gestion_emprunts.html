@@ -156,25 +156,17 @@
             </div>
         </div>
 
-        <form th:action="@{/traiter_emprunt}" method="post">
-            <div class="form-container">
-                <h3>Demandes reçues</h3>
-                <div class="form-group">
-                    <label for="borrowerName">Nom de l'emprunteur</label>
-                    <input id="borrowerName" name="borrowerName" type="text" placeholder="Nom de l'emprunteur"/>
-                </div>
-                <div class="form-group">
-                    <label for="borrowDate">Date d'emprunt</label>
-                    <input id="borrowDate" name="borrowDate" type="date"/>
-                </div>
-                <div class="form-group">
-                    <label for="bookId">Livre à emprunter</label>
-                    <input id="bookId" name="bookId" type="text" placeholder="ID du livre"/>
-                </div>
-                <button type="submit" name="action" value="accepter" class="submit-button">Accepter</button>
-                <button type="submit" name="action" value="refuser" class="submit-button">Refuser</button>
-            </div>
+        <form th:each="emprunt : ${demandes}" th:action="@{/traiter_emprunt}" method="post" class="form-container">
+            <input type="hidden" name="empruntId" th:value="${emprunt.id}" />
+
+            <p><strong>Nom:</strong> <span th:text="${emprunt.borrowerName}"></span></p>
+            <p><strong>Livre:</strong> <span th:text="${emprunt.bookTitle}"></span></p>
+            <p><strong>Date:</strong> <span th:text="${emprunt.borrowDate}"></span> → <span th:text="${emprunt.returnDate}"></span></p>
+
+            <button type="submit" name="action" value="accepter" class="submit-button">Accepter</button>
+            <button type="submit" name="action" value="refuser" class="submit-button">Refuser</button>
         </form>
+
 
         <!-- Historique des emprunts -->
         <h3 class="mt-4">Historique des Emprunts</h3>
@@ -189,12 +181,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Jean Dupont</td>
-                <td>The Mystery of Mercy</td>
-                <td>2023-04-10</td>
-                <td>2023-05-10</td>
-                <td>Retourné</td>
+            <tr th:each="emprunt : ${historique}">
+                <td th:text="${emprunt.borrowerName}"></td>
+                <td th:text="${emprunt.bookTitle}"></td>
+                <td th:text="${emprunt.borrowDate}"></td>
+                <td th:text="${emprunt.returnDate}"></td>
+                <td th:text="${emprunt.status}"></td>
             </tr>
             </tbody>
         </table>

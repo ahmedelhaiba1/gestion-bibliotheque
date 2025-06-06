@@ -69,6 +69,9 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        input[readonly] {
+            background-color: #f1f1f1;
+        }
         .submit-button {
             background-color: rgb(104,74,193);
             color: white;
@@ -102,7 +105,7 @@
             text-align: center;
         }
         h2 {
-            margin: auto auto;
+            text-align: center;
         }
     </style>
 </head>
@@ -114,7 +117,7 @@
         <div>
             <h2>Biblioo</h2>
             <nav>
-                <a th:href="@{/}">Acceuil</a>
+                <a th:href="@{/}">Accueil</a>
                 <a th:href="@{/dashboard}">Livres</a>
                 <a th:href="@{/historique}">Emprunts</a>
                 <a th:href="@{/notifications}">Notifications</a>
@@ -130,23 +133,28 @@
 
         <div class="form-container">
             <form th:action="@{/emprunter}" method="post">
+                <input type="hidden" name="bookId" th:value="${bookId}" />
+
                 <div class="book-details">
-                    <img th:src="@{/images/cover1.jpeg}" alt="Book Cover" class="book-cover" />
+                    <img th:src="@{${imageUrl != null} ? '/uploads/' + ${imageUrl} : '/images/cover1.jpeg'}"
+                         alt="Book Cover" class="book-cover" />
 
                     <div style="flex: 1;">
                         <div class="form-group">
                             <label for="bookTitle">Titre</label>
-                            <input type="text" id="bookTitle" name="bookTitle" required />
+                            <input type="text" id="bookTitle" name="bookTitle"
+                                   th:value="${emprunt.bookTitle}" readonly required />
                         </div>
 
                         <div class="form-group">
                             <label for="borrowerName">Nom d'utilisateur</label>
-                            <input type="text" id="borrowerName" name="borrowerName" required />
+                            <input type="text" id="borrowerName" name="borrowerName" th:value="${emprunt.borrowerName}" required />
                         </div>
 
                         <div class="form-group">
                             <label for="borrowDate">Date d'emprunt</label>
-                            <input type="date" id="borrowDate" name="borrowDate" required />
+                            <input type="date" id="borrowDate" name="borrowDate"
+                                   th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required />
                         </div>
 
                         <div class="form-group">
@@ -155,7 +163,7 @@
                         </div>
 
                         <button type="submit" class="submit-button">Emprunter</button>
-                        <a th:href="@{/dashboard}" class="back-link">Retour</a>
+                        <a th:href="@{/dashboard}" class="back-link">← Retour aux livres</a>
                     </div>
                 </div>
             </form>

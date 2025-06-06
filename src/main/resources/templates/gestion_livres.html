@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         /* General Styles */
@@ -194,6 +195,13 @@ border-radius: 10px;
 margin: auto;
 padding: 10px;
 }
+        .delete-icon {
+    margin-left: 10px;
+    text-decoration: none;
+  }
+  .delete-icon:hover i {
+    color: darkred;
+  }
     </style>
 
     <script>
@@ -230,7 +238,7 @@ padding: 10px;
         <!-- Formulaire d'ajout d'un livre -->
         <div class="form-container">
             <h3>Ajouter un Livre</h3>
-            <form th:action="@{/livres/ajouter}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/livres}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="bookTitle">Titre</label>
                     <input id="bookTitle" name="titre" type="text" placeholder="Titre du livre" />
@@ -258,6 +266,7 @@ padding: 10px;
         <table>
             <thead>
             <tr>
+                <th>Image</th> <!-- Added image column -->
                 <th>Titre</th>
                 <th>Auteur</th>
                 <th>Date de Publication</th>
@@ -266,18 +275,76 @@ padding: 10px;
             </thead>
             <tbody>
             <tr th:each="livre : ${livres}">
-                <td th:text="${livre.titre}">Titre</td>
-                <td th:text="${livre.auteur}">Auteur</td>
-                <td th:text="${#dates.format(livre.datePublication, 'yyyy-MM-dd')}">Date</td>
-                <td>
-                    <a th:href="@{'/livres/modifier/' + ${livre.id}}" class="btn btn-warning">Modifier</a>
-                    <a th:href="@{'/livres/supprimer/' + ${livre.id}}" class="btn btn-danger"
-                       onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
-                </td>
+                <form th:action="@{'/livres/update/' + ${livre.id}}" method="post">
+                    <td>
+                        <img th:src="@{'/uploads/' + ${livre.imageUrl}}" alt="Image du livre" style="height: 80px; width: auto;" />
+                    </td>
+                    <td>
+                        <span th:text="${livre.titre}" th:id="'titre-' + ${livre.id}"></span>
+                        <input type="text" name="titre" th:value="${livre.titre}" th:id="'input-titre-' + ${livre.id}" style="display:none;" />
+                    </td>
+                    <td>
+                        <span th:text="${livre.auteur}" th:id="'auteur-' + ${livre.id}"></span>
+                        <input type="text" name="auteur" th:value="${livre.auteur}" th:id="'input-auteur-' + ${livre.id}" style="display:none;" />
+                    </td>
+                    <td>
+                        <span th:text="${livre.datePublication}" th:id="'date-' + ${livre.id}"></span>
+                        <input type="date" name="datePublication" th:value="${livre.datePublication}" th:id="'input-date-' + ${livre.id}" style="display:none;" />
+                    </td>
+
+                    <td>
+                        <!-- Modifier icon -->
+                        <a href="javascript:void(0);" th:onclick="'editRow(' + ${livre.id} + ')'" title="Modifier">
+                            <i class="fas fa-edit" style="color: #007bff; font-size: 18px;"></i>
+                        </a>
+
+                        <!-- Supprimer icon -->
+                        <a th:href="@{'/livres/supprimer/' + ${livre.id}}"
+                           onclick="return confirm('Voulez-vous vraiment supprimer ce livre ?')"
+                           class="delete-icon"
+                           title="Supprimer">
+                            <i class="fas fa-trash" style="color: red; font-size: 18px; margin-left: 10px;"></i>
+                        </a>
+
+                        <!-- Enregistrer button -->
+                        <button type="submit" th:id="'save-btn-' + ${livre.id}" style="display:none;">
+                            💾
+                        </button>
+                    </td>
+                </form>
             </tr>
+
             </tbody>
         </table>
     </div>
 </div>
+<script>
+    function editRow(id) {
+        // Masquer les textes et afficher les inputs
+        document.getElementById('titre-' + id).style.display = 'none';
+        document.getElementById('auteur-' + id).style.display = 'none';
+        document.getElementById('date-' + id).style.display = 'none';
+
+        document.getElementById('input-titre-' + id).style.display = 'inline';
+        document.getElementById('input-auteur-' + id).style.display = 'inline';
+        document.getElementById('input-date-' + id).style.display = 'inline';
+
+        // Afficher bouton enregistrer
+        document.getElementById('save-btn-' + id).style.display = 'inline';
+    }
+
+    function saveRow(event, id) {
+        event.preventDefault();
+
+        const titre = document.getElementById('input-titre-' + id).value;
+        const auteur = document.getElementById('input-auteur-' + id).value;
+        const date = document.getElementById('input-date-' + id).value;
+
+        // Vous pouvez ici envoyer les données via fetch/ajax
+        console.log('Saving:', { id, titre, auteur, date });
+
+
+    }
+</script>
 </body>
 </html>

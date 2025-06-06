@@ -96,16 +96,18 @@
         <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 
         <form th:action="@{/auth/login}" method="post">
-            <input type="text" name="username" placeholder="Nom d'utilisateur" required />
+            <!-- Changed 'username' to 'email' -->
+            <input type="email" name="email" placeholder="Adresse email" required />
             <input type="password" name="password" placeholder="Mot de passe" required />
+
             <button type="submit">Se connecter</button>
 
-            <div th:if="${param.error}" style="color: yellow;">
-                Nom d'utilisateur ou mot de passe invalide
-            </div>
+            <!-- Changed to use errorMessage from redirectAttributes -->
+            <div th:if="${errorMessage}" style="color: yellow;" th:text="${errorMessage}"></div>
 
             <p>Vous n'avez pas de compte ? <a th:href="@{/auth/register}">Inscrivez-vous ici</a></p>
         </form>
+
     </div>
 
     <div class="image-section">

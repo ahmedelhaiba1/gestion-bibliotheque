@@ -37,4 +37,9 @@ public class EmpruntWebController {
         empruntService.enregistrer(emprunt);
         return "redirect:/historique";
     }
+    @GetMapping("/historique")
+    public String afficherHistorique(Model model) {
+        model.addAttribute("emprunts", empruntService.listerEmprunts());
+        return "emprunts/historique";
+    }
 }
